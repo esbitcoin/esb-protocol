@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ contract MockOracle is Oracle {
     bool private _latestValid;
     address private _usdc;
 
-    constructor (address pair, address dollar, address usdc) Oracle(dollar) public {
+    constructor (address pair, address bitcoin, address usdc) Oracle(bitcoin) public {
         _pair = IUniswapV2Pair(pair);
         _index = 0;
         _usdc = usdc;

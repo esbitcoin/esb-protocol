@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -26,16 +26,16 @@ import "./PoolGetters.sol";
 contract Liquidity is PoolGetters {
     address private constant UNISWAP_FACTORY = address(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
 
-    function addLiquidity(uint256 dollarAmount) internal returns (uint256, uint256) {
-        (address dollar, address usdc) = (address(dollar()), usdc());
-        (uint reserveA, uint reserveB) = getReserves(dollar, usdc);
+    function addLiquidity(uint256 bitcoinAmount) internal returns (uint256, uint256) {
+        (address bitcoin, address usdc) = (address(bitcoin()), usdc());
+        (uint reserveA, uint reserveB) = getReserves(bitcoin, usdc);
 
         uint256 usdcAmount = (reserveA == 0 && reserveB == 0) ?
-             dollarAmount :
-             UniswapV2Library.quote(dollarAmount, reserveA, reserveB);
+             bitcoinAmount :
+             UniswapV2Library.quote(bitcoinAmount, reserveA, reserveB);
 
         address pair = address(univ2());
-        IERC20(dollar).transfer(pair, dollarAmount);
+        IERC20(bitcoin).transfer(pair, bitcoinAmount);
         IERC20(usdc).transferFrom(msg.sender, pair, usdcAmount);
         return (usdcAmount, IUniswapV2Pair(pair).mint(address(this)));
     }

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import '../external/UniswapV2Library.sol';
 import "../external/Require.sol";
 import "../external/Decimal.sol";
 import "./IOracle.sol";
-import "./IUSDC.sol";
 import "../Constants.sol";
 
 contract Oracle is IOracle {
@@ -34,7 +33,7 @@ contract Oracle is IOracle {
     address private constant UNISWAP_FACTORY = address(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
 
     address internal _dao;
-    address internal _dollar;
+    address internal _bitcoin;
 
     bool internal _initialized;
     IUniswapV2Pair internal _pair;
@@ -44,19 +43,19 @@ contract Oracle is IOracle {
 
     uint256 internal _reserve;
 
-    constructor (address dollar) public {
+    constructor (address bitcoin) public {
         _dao = msg.sender;
-        _dollar = dollar;
+        _bitcoin = bitcoin;
     }
 
     function setup() public onlyDao {
-        _pair = IUniswapV2Pair(IUniswapV2Factory(UNISWAP_FACTORY).createPair(_dollar, usdc()));
+        _pair = IUniswapV2Pair(IUniswapV2Factory(UNISWAP_FACTORY).createPair(_bitcoin, usdc()));
 
         (address token0, address token1) = (_pair.token0(), _pair.token1());
-        _index = _dollar == token0 ? 0 : 1;
+        _index = _bitcoin == token0 ? 0 : 1;
 
         Require.that(
-            _index == 0 || _dollar == token1,
+            _index == 0 || _bitcoin == token1,
             FILE,
             "Døllar not found"
         );
@@ -95,16 +94,12 @@ contract Oracle is IOracle {
     function updateOracle() private returns (Decimal.D256 memory, bool) {
         Decimal.D256 memory price = updatePrice();
         uint256 lastReserve = updateReserve();
-        bool isBlacklisted = IUSDC(usdc()).isBlacklisted(address(_pair));
 
         bool valid = true;
         if (lastReserve < Constants.getOracleReserveMinimum()) {
             valid = false;
         }
         if (_reserve < Constants.getOracleReserveMinimum()) {
-            valid = false;
-        }
-        if (isBlacklisted) {
             valid = false;
         }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ import "../oracle/Pool.sol";
 contract MockPool is Pool {
     address private _usdc;
     address private _dao;
-    address private _dollar;
+    address private _bitcoin;
     address private _univ2;
 
-    constructor(address dollar, address usdc, address univ2) Pool(dollar, univ2) public {
+    constructor(address bitcoin, address usdc, address univ2) Pool(bitcoin, univ2) public {
         _usdc = usdc;
     }
 
-    function set(address dao, address dollar, address univ2) external {
+    function set(address dao, address bitcoin, address univ2) external {
         _dao = dao;
-        _dollar = dollar;
+        _bitcoin = bitcoin;
         _univ2 = univ2;
     }
 
@@ -43,8 +43,8 @@ contract MockPool is Pool {
         return IDAO(_dao);
     }
 
-    function dollar() public view returns (IDollar) {
-        return IDollar(_dollar);
+    function bitcoin() public view returns (IBitcoin) {
+        return IBitcoin(_bitcoin);
     }
 
     function univ2() public view returns (IERC20) {

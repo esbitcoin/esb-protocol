@@ -5,7 +5,7 @@ const { expect } = require('chai');
 
 const MockRegulator = contract.fromArtifact('MockRegulator');
 const MockSettableOracle = contract.fromArtifact('MockSettableOracle');
-const Dollar = contract.fromArtifact('Dollar');
+const Bitcoin = contract.fromArtifact('Bitcoin');
 
 const POOL_REWARD_PERCENT = 40;
 
@@ -23,7 +23,7 @@ describe('Regulator', function () {
   beforeEach(async function () {
     this.oracle = await MockSettableOracle.new({from: ownerAddress, gas: 8000000});
     this.regulator = await MockRegulator.new(this.oracle.address, poolAddress, {from: ownerAddress, gas: 8000000});
-    this.dollar = await Dollar.at(await this.regulator.dollar());
+    this.bitcoin = await Bitcoin.at(await this.regulator.bitcoin());
   });
 
   describe('after bootstrapped', function () {
@@ -53,10 +53,10 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('mints new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(lessPoolIncentive(1000000, this.expectedReward));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(poolIncentive(this.expectedReward));
+          it('mints new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(lessPoolIncentive(1000000, this.expectedReward));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(poolIncentive(this.expectedReward));
           });
 
           it('updates totals', async function () {
@@ -97,10 +97,10 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('mints new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(lessPoolIncentive(1000000, this.expectedReward));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(poolIncentive(this.expectedReward));
+          it('mints new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(lessPoolIncentive(1000000, this.expectedReward));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(poolIncentive(this.expectedReward));
           });
 
           it('updates totals', async function () {
@@ -149,11 +149,11 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('mints new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward - this.expectedRewardLP)));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(this.expectedRewardLP));
-            expect(await this.dollar.balanceOf(LEGACY_POOL_ADDRESS)).to.be.bignumber.equal(new BN(0));
+          it('mints new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward - this.expectedRewardLP)));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(this.expectedRewardLP));
+            expect(await this.bitcoin.balanceOf(LEGACY_POOL_ADDRESS)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates totals', async function () {
@@ -202,10 +202,10 @@ describe('Regulator', function () {
           this.txHash = this.result.tx;
         });
 
-        it('mints new Dollar tokens', async function () {
-          expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
-          expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(lessPoolIncentive(1002000, this.expectedReward - 2000).sub(new BN(this.poolReward)));
-          expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(this.poolReward).add(poolIncentive(this.expectedReward - 2000)));
+        it('mints new Bitcoin tokens', async function () {
+          expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
+          expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(lessPoolIncentive(1002000, this.expectedReward - 2000).sub(new BN(this.poolReward)));
+          expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(this.poolReward).add(poolIncentive(this.expectedReward - 2000)));
         });
 
         it('updates totals', async function () {
@@ -255,11 +255,11 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('mints new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward - this.expectedRewardLP)));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(this.expectedRewardLP));
-            expect(await this.dollar.balanceOf(LEGACY_POOL_ADDRESS)).to.be.bignumber.equal(new BN(0));
+          it('mints new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward)));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000).add(new BN(this.expectedReward - this.expectedRewardLP)));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(this.expectedRewardLP));
+            expect(await this.bitcoin.balanceOf(LEGACY_POOL_ADDRESS)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates totals', async function () {
@@ -304,10 +304,10 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('doesnt mint new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
+          it('doesnt mint new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates totals', async function () {
@@ -349,10 +349,10 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('doesnt mint new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
+          it('doesnt mint new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates totals', async function () {
@@ -395,10 +395,10 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('doesnt mint new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
+          it('doesnt mint new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates totals', async function () {
@@ -442,11 +442,11 @@ describe('Regulator', function () {
             this.txHash = this.result.tx;
           });
 
-          it('doesnt mint new Dollar tokens', async function () {
-            expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
-            expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
-            expect(await this.dollar.balanceOf(LEGACY_POOL_ADDRESS)).to.be.bignumber.equal(new BN(0));
+          it('doesnt mint new Bitcoin tokens', async function () {
+            expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
+            expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(LEGACY_POOL_ADDRESS)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates totals', async function () {
@@ -489,10 +489,10 @@ describe('Regulator', function () {
           this.txHash = this.result.tx;
         });
 
-        it('doesnt mint new Dollar tokens', async function () {
-          expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000));
-          expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
-          expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
+        it('doesnt mint new Bitcoin tokens', async function () {
+          expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000));
+          expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
+          expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
         });
 
         it('updates totals', async function () {
@@ -530,10 +530,10 @@ describe('Regulator', function () {
           this.txHash = this.result.tx;
         });
 
-        it('doesnt mint new Dollar tokens', async function () {
-          expect(await this.dollar.totalSupply()).to.be.bignumber.equal(new BN(1000000));
-          expect(await this.dollar.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
-          expect(await this.dollar.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
+        it('doesnt mint new Bitcoin tokens', async function () {
+          expect(await this.bitcoin.totalSupply()).to.be.bignumber.equal(new BN(1000000));
+          expect(await this.bitcoin.balanceOf(this.regulator.address)).to.be.bignumber.equal(new BN(1000000));
+          expect(await this.bitcoin.balanceOf(poolAddress)).to.be.bignumber.equal(new BN(0));
         });
 
         it('updates totals', async function () {

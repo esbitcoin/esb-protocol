@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
-import "../token/IDollar.sol";
+import "../token/IBitcoin.sol";
 import "../oracle/IOracle.sol";
 import "../external/Decimal.sol";
 
@@ -77,7 +77,7 @@ contract Candidate {
 
 contract Storage {
     struct Provider {
-        IDollar dollar;
+        IBitcoin bitcoin;
         IOracle oracle;
         address pool;
     }

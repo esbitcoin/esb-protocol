@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ contract Implementation is State, Bonding, Market, Regulator, Govern {
 
     function initialize() initializer public {
         // committer reward:
-        mintToAccount(msg.sender, 100e18); // 100 DSD to committer
-        // contributor  rewards:
-        mintToAccount(0xF414CFf71eCC35320Df0BB577E3Bc9B69c9E1f07, 1000e18); // 1000 DSD to devnull
+        mintToAccount(msg.sender, 1e16); // 0.01 EBS to commiter
+        // contributor rewards:
+        mintToAccount(0x0132C747656Eddb188AD7E0D55A5d0E16B8242fC, 1e17); // 0.1 EBS to devs
     }
 
     function advance() external incentivized {

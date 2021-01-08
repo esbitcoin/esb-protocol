@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
 import "../dao/Comptroller.sol";
-import "../token/Dollar.sol";
+import "../token/Bitcoin.sol";
 import "./MockState.sol";
 
 contract MockComptroller is Comptroller, MockState {
     constructor(address pool) public {
-        _state.provider.dollar = new Dollar();
+        _state.provider.bitcoin = new Bitcoin();
         _state.provider.pool = pool;
     }
 
@@ -57,6 +57,6 @@ contract MockComptroller is Comptroller, MockState {
 
     /* For testing only */
     function mintToE(address account, uint256 amount) external {
-        dollar().mint(account, amount);
+        bitcoin().mint(account, amount);
     }
 }

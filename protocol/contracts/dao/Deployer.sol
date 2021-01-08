@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
 import "../external/Decimal.sol";
-import "../token/Dollar.sol";
+import "../token/Bitcoin.sol";
 import "../oracle/Oracle.sol";
 import "../oracle/Pool.sol";
 import "./Upgradeable.sol";
@@ -27,7 +27,7 @@ import "./Permission.sol";
 
 contract Deployer1 is State, Permission, Upgradeable {
     function initialize() initializer public {
-        _state.provider.dollar = new Dollar();
+        _state.provider.bitcoin = new Bitcoin();
     }
 
     function implement(address implementation) external {
@@ -37,7 +37,7 @@ contract Deployer1 is State, Permission, Upgradeable {
 
 contract Deployer2 is State, Permission, Upgradeable {
     function initialize() initializer public {
-        _state.provider.oracle = new Oracle(address(dollar()));
+        _state.provider.oracle = new Oracle(address(bitcoin()));
         oracle().setup();
     }
 
@@ -48,7 +48,7 @@ contract Deployer2 is State, Permission, Upgradeable {
 
 contract Deployer3 is State, Permission, Upgradeable {
     function initialize() initializer public {
-        _state.provider.pool = address(new Pool(address(dollar()), address(oracle().pair())));
+        _state.provider.pool = address(new Pool(address(bitcoin()), address(oracle().pair())));
     }
 
     function implement(address implementation) external {

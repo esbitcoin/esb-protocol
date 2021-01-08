@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -45,20 +45,20 @@ contract Bonding is Setters, Permission {
     }
 
     function deposit(uint256 value) external {
-        dollar().transferFrom(msg.sender, address(this), value);
+        bitcoin().transferFrom(msg.sender, address(this), value);
         incrementBalanceOfStaged(msg.sender, value);
 
         emit Deposit(msg.sender, value);
     }
 
     function withdraw(uint256 value) external onlyFrozenOrLocked(msg.sender) {
-        dollar().transfer(msg.sender, value);
+        bitcoin().transfer(msg.sender, value);
         decrementBalanceOfStaged(msg.sender, value, "Bonding: insufficient staged balance");
 
         emit Withdraw(msg.sender, value);
     }
 
-    function bond(uint256 value) external onlyFrozenOrFluid(msg.sender) {
+    function bond(uint256 value) external {
         unfreeze(msg.sender);
 
         uint256 balance = totalBonded() == 0 ?

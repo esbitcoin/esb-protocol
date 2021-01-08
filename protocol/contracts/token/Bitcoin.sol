@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
 import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 import "./Permittable.sol";
-import "./IDollar.sol";
+import "./IBitcoin.sol";
 
 
-contract Dollar is IDollar, MinterRole, ERC20Detailed, Permittable, ERC20Burnable  {
+contract Bitcoin is IBitcoin, MinterRole, ERC20Detailed, Permittable, ERC20Burnable  {
 
     constructor()
-    ERC20Detailed("Dynamic Set Dollar", "DSD", 18)
+    ERC20Detailed("Empty Set Bitcoin", "ESB", 18)
     Permittable()
     public
     { }
@@ -43,7 +43,7 @@ contract Dollar is IDollar, MinterRole, ERC20Detailed, Permittable, ERC20Burnabl
             _approve(
                 sender,
                 _msgSender(),
-                allowance(sender, _msgSender()).sub(amount, "Dollar: transfer amount exceeds allowance"));
+                allowance(sender, _msgSender()).sub(amount, "Bitcoin: transfer amount exceeds allowance"));
         }
         return true;
     }

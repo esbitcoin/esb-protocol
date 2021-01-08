@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ import "../oracle/PoolSetters.sol";
 
 contract MockPoolState is PoolSetters {
     address private _dao;
-    address private _dollar;
+    address private _bitcoin;
 
-    function set(address dao, address dollar) external {
+    function set(address dao, address bitcoin) external {
         _dao = dao;
-        _dollar = dollar;
+        _bitcoin = bitcoin;
     }
 
     function dao() public view returns (IDAO) {
         return IDAO(_dao);
     }
 
-    function dollar() public view returns (IDollar) {
-        return IDollar(_dollar);
+    function bitcoin() public view returns (IBitcoin) {
+        return IBitcoin(_bitcoin);
     }
 
     /**

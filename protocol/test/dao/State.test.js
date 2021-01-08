@@ -23,7 +23,7 @@ describe('State', function () {
   describe('erc20 details', function () {
     describe('name', function () {
       it('increments total bonded', async function () {
-        expect(await this.setters.name()).to.be.equal("Dynamic Set Dollar Stake");
+        expect(await this.setters.name()).to.be.equal("Dynamic Set Bitcoin Stake");
       });
     });
 

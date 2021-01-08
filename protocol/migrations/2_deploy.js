@@ -36,8 +36,11 @@ module.exports = function(deployer) {
       case 'development':
         await deployTestnet(deployer);
         break;
+      case 'development-fork':
+        await deployTestnet(deployer);
+        break;
       case 'rinkeby':
-      case 'ropsten':
+      case 'kovan':
         await deployTestnet(deployer);
         break;
       default:

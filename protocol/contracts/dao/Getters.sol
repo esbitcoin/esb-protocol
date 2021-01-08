@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ contract Getters is State {
      */
 
     function name() public view returns (string memory) {
-        return "Dynamic Set Dollar Stake";
+        return "Dynamic Set Bitcoin Stake";
     }
 
     function symbol() public view returns (string memory) {
@@ -59,8 +59,8 @@ contract Getters is State {
      * Global
      */
 
-    function dollar() public view returns (IDollar) {
-        return _state.provider.dollar;
+    function bitcoin() public view returns (IBitcoin) {
+        return _state.provider.bitcoin;
     }
 
     function oracle() public view returns (IOracle) {
@@ -92,7 +92,7 @@ contract Getters is State {
     }
 
     function totalNet() public view returns (uint256) {
-        return dollar().totalSupply().sub(totalDebt());
+        return bitcoin().totalSupply().sub(totalDebt());
     }
 
     /**

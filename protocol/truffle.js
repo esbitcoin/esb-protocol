@@ -18,9 +18,9 @@
  *
  */
 const PrivateKeyProvider = require('truffle-privatekey-provider');
-const privateKey = process.env.DSD_PRIVATE_KEY;
-const infuraId = process.env.DSD_INFURA_ID;
-const etherscanKey = process.env.DSD_ETHERSCAN_KEY;
+const privateKey = process.env.ESB_PRIVATE_KEY;
+const infuraId = process.env.ESB_INFURA_ID;
+const etherscanKey = process.env.ESB_ETHERSCAN_KEY;
 
 module.exports = {
   /**
@@ -71,6 +71,15 @@ module.exports = {
       provider: () => new PrivateKeyProvider(privateKey, 'https://rinkeby.infura.io/v3/' + infuraId),
       network_id: 4,       // rinkeby's id
       gas: 5500000,        // rinkeby has a lower block limit than mainnet
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+    
+    kovan: {
+      provider: () => new PrivateKeyProvider(privateKey, 'https://kovan.infura.io/v3/' + infuraId),
+      network_id: 42,       // Ropsten's id
+      gas: 5500000,        // Ropsten has a lower block limit than mainnet
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ contract Market is Comptroller, Curve {
     bytes32 private constant FILE = "Market";
 
     event CouponExpiration(uint256 indexed epoch, uint256 couponsExpired, uint256 lessRedeemable, uint256 lessDebt, uint256 newBonded);
-    event CouponPurchase(address indexed account, uint256 indexed epoch, uint256 dollarAmount, uint256 couponAmount);
+    event CouponPurchase(address indexed account, uint256 indexed epoch, uint256 bitcoinAmount, uint256 couponAmount);
     event CouponRedemption(address indexed account, uint256 indexed epoch, uint256 couponAmount);
     event CouponBurn(address indexed account, uint256 indexed epoch, uint256 couponAmount);
     event CouponTransfer(address indexed from, address indexed to, uint256 indexed epoch, uint256 value);
@@ -63,7 +63,7 @@ contract Market is Comptroller, Curve {
     }
 
     function couponPremium(uint256 amount) public view returns (uint256) {
-        return calculateCouponPremium(dollar().totalSupply(), totalDebt(), amount);
+        return calculateCouponPremium(bitcoin().totalSupply(), totalDebt(), amount);
     }
 
     function couponRedemptionPenalty(uint256 couponEpoch, uint256 couponAmount) public view returns (uint256) {
@@ -83,25 +83,25 @@ contract Market is Comptroller, Curve {
         return Decimal.D256({value: couponAmount}).mul(couponEpochDecayedPenalty).value;
     }
 
-    function purchaseCoupons(uint256 dollarAmount) external returns (uint256) {
+    function purchaseCoupons(uint256 bitcoinAmount) external returns (uint256) {
         Require.that(
-            dollarAmount > 0,
+            bitcoinAmount > 0,
             FILE,
             "Must purchase non-zero amount"
         );
 
         Require.that(
-            totalDebt() >= dollarAmount,
+            totalDebt() >= bitcoinAmount,
             FILE,
             "Not enough debt"
         );
 
         uint256 epoch = epoch();
-        uint256 couponAmount = dollarAmount.add(couponPremium(dollarAmount));
-        burnFromAccount(msg.sender, dollarAmount);
+        uint256 couponAmount = bitcoinAmount.add(couponPremium(bitcoinAmount));
+        burnFromAccount(msg.sender, bitcoinAmount);
         incrementBalanceOfCoupons(msg.sender, epoch, couponAmount);
 
-        emit CouponPurchase(msg.sender, epoch, dollarAmount, couponAmount);
+        emit CouponPurchase(msg.sender, epoch, bitcoinAmount, couponAmount);
 
         return couponAmount;
     }

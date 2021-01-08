@@ -23,16 +23,16 @@ describe('Pool', function () {
   beforeEach(async function () {
     this.dao = await MockSettableDAO.new({from: ownerAddress, gas: 8000000});
     await this.dao.set(1);
-    this.dollar = await MockToken.new("Dynamic Set Dollar", "DSD", 18, {from: ownerAddress, gas: 8000000});
+    this.bitcoin = await MockToken.new("Dynamic Set Bitcoin", "DSD", 18, {from: ownerAddress, gas: 8000000});
     this.usdc = await MockToken.new("USD//C", "USDC", 18, {from: ownerAddress, gas: 8000000});
     this.univ2 = await MockUniswapV2PairLiquidity.new({from: ownerAddress, gas: 8000000});
-    this.pool = await MockPool.new(this.dollar.address, this.usdc.address, this.univ2.address, {from: ownerAddress, gas: 8000000});
-    await this.pool.set(this.dao.address, this.dollar.address, this.univ2.address);
+    this.pool = await MockPool.new(this.bitcoin.address, this.usdc.address, this.univ2.address, {from: ownerAddress, gas: 8000000});
+    await this.pool.set(this.dao.address, this.bitcoin.address, this.univ2.address);
   });
 
   describe('frozen', function () {
     describe('starts as frozen', function () {
-      it('mints new Dollar tokens', async function () {
+      it('mints new Bitcoin tokens', async function () {
         expect(await this.pool.statusOf(userAddress)).to.be.bignumber.equal(FROZEN);
       });
     });
@@ -131,7 +131,7 @@ describe('Pool', function () {
         await this.pool.deposit(1000, {from: userAddress});
         await this.pool.bond(1000, {from: userAddress});
         await this.dao.set((await this.dao.epoch()) + 1);
-        await this.dollar.mint(this.pool.address, 1000);
+        await this.bitcoin.mint(this.pool.address, 1000);
         await this.pool.unbond(1000, {from: userAddress});
         await this.dao.set((await this.dao.epoch()) + 1);
       });
@@ -147,13 +147,13 @@ describe('Pool', function () {
         });
 
         it('updates users balances', async function () {
-          expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(1000));
+          expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(1000));
           expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(0));
           expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(0));
         });
 
         it('updates dao balances', async function () {
-          expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(0));
+          expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(0));
           expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(0));
           expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(0));
         });
@@ -169,7 +169,7 @@ describe('Pool', function () {
 
       describe('too much', function () {
         beforeEach(async function () {
-          await this.dollar.mint(this.pool.address, 1000);
+          await this.bitcoin.mint(this.pool.address, 1000);
         });
 
         it('reverts', async function () {
@@ -306,7 +306,7 @@ describe('Pool', function () {
         describe('before bonding', function () {
           beforeEach(async function () {
             await this.univ2.faucet(userAddress, 1000);
-            await this.dollar.mint(this.pool.address, 1000);
+            await this.bitcoin.mint(this.pool.address, 1000);
             await this.univ2.approve(this.pool.address, 1000, {from: userAddress});
             await this.pool.deposit(1000, {from: userAddress});
 
@@ -319,13 +319,13 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(1000));
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
             expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(1000));
           });
@@ -349,7 +349,7 @@ describe('Pool', function () {
             this.result = await this.pool.bond(500, {from: userAddress});
             this.txHash = this.result.tx;
 
-            await this.dollar.mint(this.pool.address, 1000);
+            await this.bitcoin.mint(this.pool.address, 1000);
           });
 
           it('is fluid', async function () {
@@ -361,13 +361,13 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(1000));
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
             expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(1000));
           });
@@ -385,7 +385,7 @@ describe('Pool', function () {
         describe('multiple with reward first', function () {
           beforeEach(async function () {
             await this.univ2.faucet(userAddress1, 1000);
-            await this.dollar.mint(this.pool.address, new BN(1000));
+            await this.bitcoin.mint(this.pool.address, new BN(1000));
             await this.univ2.approve(this.pool.address, 1000, {from: userAddress1});
             await this.pool.deposit(1000, {from: userAddress1});
 
@@ -397,7 +397,7 @@ describe('Pool', function () {
             await this.pool.bond(400, {from: userAddress2});
 
             await incrementEpoch(this.dao);
-            await this.dollar.mint(this.pool.address, new BN(1000));
+            await this.bitcoin.mint(this.pool.address, new BN(1000));
 
             await this.univ2.faucet(userAddress, 1000);
             await this.univ2.approve(this.pool.address, 800, {from: userAddress});
@@ -412,7 +412,7 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfRewarded(userAddress1)).to.be.bignumber.equal(new BN(1599));
             expect(await this.pool.balanceOfPhantom(userAddress1)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfRewarded(userAddress2)).to.be.bignumber.equal(new BN(400));
@@ -422,7 +422,7 @@ describe('Pool', function () {
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(2000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(2000));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(2000));
             expect(await this.pool.totalPhantom()).to.be.bignumber.equal(new BN(1999));
           });
@@ -451,7 +451,7 @@ describe('Pool', function () {
             await this.pool.bond(400, {from: userAddress2});
 
             await incrementEpoch(this.dao);
-            await this.dollar.mint(this.pool.address, new BN(1000).mul(INITIAL_STAKE_MULTIPLE));
+            await this.bitcoin.mint(this.pool.address, new BN(1000).mul(INITIAL_STAKE_MULTIPLE));
 
             await this.univ2.faucet(userAddress, 1000);
             await this.univ2.approve(this.pool.address, 800, {from: userAddress});
@@ -466,7 +466,7 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfRewarded(userAddress1)).to.be.bignumber.equal(new BN(600).mul(INITIAL_STAKE_MULTIPLE));
             expect(await this.pool.balanceOfPhantom(userAddress1)).to.be.bignumber.equal(new BN(600).mul(INITIAL_STAKE_MULTIPLE));
             expect(await this.pool.balanceOfRewarded(userAddress2)).to.be.bignumber.equal(new BN(400).mul(INITIAL_STAKE_MULTIPLE));
@@ -476,7 +476,7 @@ describe('Pool', function () {
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000).mul(INITIAL_STAKE_MULTIPLE));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000).mul(INITIAL_STAKE_MULTIPLE));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(1000).mul(INITIAL_STAKE_MULTIPLE));
             expect(await this.pool.totalPhantom()).to.be.bignumber.equal(new BN(2000).mul(INITIAL_STAKE_MULTIPLE));
           });
@@ -625,7 +625,7 @@ describe('Pool', function () {
 
           await this.pool.bond(1000, {from: userAddress});
           await incrementEpoch(this.dao);
-          await this.dollar.mint(this.pool.address, 1000);
+          await this.bitcoin.mint(this.pool.address, 1000);
         });
 
         describe('simple', function () {
@@ -639,14 +639,14 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(1000));
             expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfPhantom(userAddress)).to.be.bignumber.equal(new BN(0));
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
             expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(1000));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.totalPhantom()).to.be.bignumber.equal(new BN(0));
@@ -674,14 +674,14 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(800));
             expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(200));
             expect(await this.pool.balanceOfPhantom(userAddress)).to.be.bignumber.equal(new BN(200).mul(INITIAL_STAKE_MULTIPLE));
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(1000));
             expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(800));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(200));
             expect(await this.pool.totalPhantom()).to.be.bignumber.equal(new BN(200).mul(INITIAL_STAKE_MULTIPLE));
@@ -712,7 +712,7 @@ describe('Pool', function () {
             await this.pool.bond(400, {from: userAddress2});
 
             await incrementEpoch(this.dao);
-            await this.dollar.mint(this.pool.address, 1000);
+            await this.bitcoin.mint(this.pool.address, 1000);
 
             this.result = await this.pool.unbond(new BN(800), {from: userAddress});
             this.txHash = this.result.tx;
@@ -723,7 +723,7 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(1200));
             expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(300));
             expect(await this.pool.balanceOfPhantom(userAddress)).to.be.bignumber.equal(new BN(200).mul(INITIAL_STAKE_MULTIPLE));
@@ -736,7 +736,7 @@ describe('Pool', function () {
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(2000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(2000));
             expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(1200));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(800));
             expect(await this.pool.totalPhantom()).to.be.bignumber.equal(new BN(1200).mul(INITIAL_STAKE_MULTIPLE).addn(1000));
@@ -767,7 +767,7 @@ describe('Pool', function () {
             await this.pool.bond(500, {from: userAddress2});
 
             await incrementEpoch(this.dao);
-            await this.dollar.mint(this.pool.address, 1000);
+            await this.bitcoin.mint(this.pool.address, 1000);
 
             await this.pool.unbond(new BN(1000), {from: userAddress});
             await this.pool.bond(new BN(1000), {from: userAddress});
@@ -782,7 +782,7 @@ describe('Pool', function () {
           });
 
           it('updates users balances', async function () {
-            expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
+            expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfClaimable(userAddress)).to.be.bignumber.equal(new BN(1476));
             expect(await this.pool.balanceOfRewarded(userAddress)).to.be.bignumber.equal(new BN(0));
             expect(await this.pool.balanceOfPhantom(userAddress)).to.be.bignumber.equal(new BN(200).mul(INITIAL_STAKE_MULTIPLE).addn(296));
@@ -795,7 +795,7 @@ describe('Pool', function () {
           });
 
           it('updates dao balances', async function () {
-            expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(2000));
+            expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(2000));
             expect(await this.pool.totalClaimable()).to.be.bignumber.equal(new BN(1476));
             expect(await this.pool.totalRewarded()).to.be.bignumber.equal(new BN(524));
             expect(await this.pool.totalPhantom()).to.be.bignumber.equal(new BN(1300).mul(INITIAL_STAKE_MULTIPLE).addn(1396));
@@ -825,7 +825,7 @@ describe('Pool', function () {
         for (var i = 0; i < this.poolLockupEpochs; i++) {
           await incrementEpoch(this.dao);
         }
-        await this.dollar.mint(this.pool.address, 1000);
+        await this.bitcoin.mint(this.pool.address, 1000);
       });
 
       describe('not enough rewards', function () {
@@ -896,7 +896,7 @@ describe('Pool', function () {
           await this.pool.bond(1000, {from: userAddress1});
 
           await incrementEpoch(this.dao);
-          await this.dollar.mint(this.pool.address, 1000);
+          await this.bitcoin.mint(this.pool.address, 1000);
 
           // 1000 DSD + 3000 USDC
           await this.univ2.set(1000, 3000, 10);
@@ -942,7 +942,7 @@ describe('Pool', function () {
 
   describe('fluid', function () {
     beforeEach(async function () {
-      await this.dollar.mint(this.pool.address, 1000);
+      await this.bitcoin.mint(this.pool.address, 1000);
       await this.univ2.faucet(userAddress, 1000);
       await this.univ2.approve(this.pool.address, 1000, {from: userAddress});
       await this.pool.deposit(1000, {from: userAddress});
@@ -1051,16 +1051,16 @@ describe('Pool', function () {
       await this.pool.deposit(1000, {from: userAddress});
       await this.pool.bond(1000, {from: userAddress});
       await this.dao.set((await this.dao.epoch()) + 1);
-      await this.dollar.mint(this.pool.address, 1000);
+      await this.bitcoin.mint(this.pool.address, 1000);
       await this.pool.unbond(500, {from: userAddress});
       await this.dao.set((await this.dao.epoch()) + 1);
     });
 
     describe('as dao', function () {
       beforeEach(async function () {
-        await this.pool.set(mockDao, this.dollar.address, this.univ2.address);
+        await this.pool.set(mockDao, this.bitcoin.address, this.univ2.address);
         await this.pool.emergencyPause({from: mockDao});
-        await this.pool.set(this.dao.address, this.dollar.address, this.univ2.address);
+        await this.pool.set(this.dao.address, this.bitcoin.address, this.univ2.address);
       });
 
       it('is paused', async function () {
@@ -1106,7 +1106,7 @@ describe('Pool', function () {
         });
 
         it('basic claim check', async function () {
-          expect(await this.dollar.balanceOf(userAddress)).to.be.bignumber.equal(new BN(200));
+          expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(200));
         });
       });
     });
@@ -1125,21 +1125,21 @@ describe('Pool', function () {
       await this.pool.deposit(1000, {from: userAddress});
       await this.pool.bond(1000, {from: userAddress});
       await this.dao.set((await this.dao.epoch()) + 1);
-      await this.dollar.mint(this.pool.address, 1000);
+      await this.bitcoin.mint(this.pool.address, 1000);
     });
 
     describe('as dao', function () {
       beforeEach(async function () {
-        await this.pool.set(mockDao, this.dollar.address, this.univ2.address);
+        await this.pool.set(mockDao, this.bitcoin.address, this.univ2.address);
         await this.pool.emergencyWithdraw(this.univ2.address, 1000, {from: mockDao});
-        await this.pool.emergencyWithdraw(this.dollar.address, 1000, {from: mockDao});
+        await this.pool.emergencyWithdraw(this.bitcoin.address, 1000, {from: mockDao});
       });
 
       it('transfers funds to the dao', async function () {
         expect(await this.univ2.balanceOf(mockDao)).to.be.bignumber.equal(new BN(1000));
         expect(await this.univ2.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(0));
-        expect(await this.dollar.balanceOf(mockDao)).to.be.bignumber.equal(new BN(1000));
-        expect(await this.dollar.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(0));
+        expect(await this.bitcoin.balanceOf(mockDao)).to.be.bignumber.equal(new BN(1000));
+        expect(await this.bitcoin.balanceOf(this.pool.address)).to.be.bignumber.equal(new BN(0));
       });
     });
 

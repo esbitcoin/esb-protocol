@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ contract Comptroller is Setters {
     bytes32 private constant FILE = "Comptroller";
 
     function mintToAccount(address account, uint256 amount) internal {
-        dollar().mint(account, amount);
+        bitcoin().mint(account, amount);
         if (!bootstrappingAt(epoch())) {
             increaseDebt(amount);
         }
@@ -36,22 +36,22 @@ contract Comptroller is Setters {
     }
 
     function burnFromAccount(address account, uint256 amount) internal {
-        dollar().transferFrom(account, address(this), amount);
-        dollar().burn(amount);
+        bitcoin().transferFrom(account, address(this), amount);
+        bitcoin().burn(amount);
         decrementTotalDebt(amount, "Comptroller: not enough outstanding debt");
 
         balanceCheck();
     }
 
     function redeemToAccount(address account, uint256 amount) internal {
-        dollar().transfer(account, amount);
+        bitcoin().transfer(account, amount);
         decrementTotalRedeemable(amount, "Comptroller: not enough redeemable balance");
 
         balanceCheck();
     }
 
     function burnRedeemable(uint256 amount) internal {
-        dollar().burn(amount);
+        bitcoin().burn(amount);
         decrementTotalRedeemable(amount, "Comptroller: not enough redeemable balance");
 
         balanceCheck();
@@ -116,7 +116,7 @@ contract Comptroller is Setters {
     }
 
     function resetDebt(Decimal.D256 memory targetDebtRatio) internal {
-        uint256 targetDebt = targetDebtRatio.mul(dollar().totalSupply()).asUint256();
+        uint256 targetDebt = targetDebtRatio.mul(bitcoin().totalSupply()).asUint256();
         uint256 currentDebt = totalDebt();
 
         if (currentDebt > targetDebt) {
@@ -127,7 +127,7 @@ contract Comptroller is Setters {
 
     function balanceCheck() private {
         Require.that(
-            dollar().balanceOf(address(this)) >= totalBonded().add(totalStaged()).add(totalRedeemable()),
+            bitcoin().balanceOf(address(this)) >= totalBonded().add(totalStaged()).add(totalRedeemable()),
             FILE,
             "Inconsistent balances"
         );
@@ -151,19 +151,19 @@ contract Comptroller is Setters {
 
     function mintToDAO(uint256 amount) private {
         if (amount > 0) {
-            dollar().mint(address(this), amount);
+            bitcoin().mint(address(this), amount);
             incrementTotalBonded(amount);
         }
     }
 
     function mintToPool(uint256 amount) private {
         if (amount > 0) {
-            dollar().mint(pool(), amount);
+            bitcoin().mint(pool(), amount);
         }
     }
 
     function mintToRedeemable(uint256 amount) private {
-        dollar().mint(address(this), amount);
+        bitcoin().mint(address(this), amount);
         incrementTotalRedeemable(amount);
 
         balanceCheck();

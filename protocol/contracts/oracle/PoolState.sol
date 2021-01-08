@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@ pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../token/IDollar.sol";
+import "../token/IBitcoin.sol";
 import "./IDAO.sol";
-import "./IUSDC.sol";
 
 contract PoolAccount {
     enum Status {
@@ -41,7 +40,7 @@ contract PoolAccount {
 contract PoolStorage {
     struct Provider {
         IDAO dao;
-        IDollar dollar;
+        IBitcoin bitcoin;
         IERC20 univ2;
     }
     

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ contract PoolGetters is PoolState {
         return _state.provider.dao;
     }
 
-    function dollar() public view returns (IDollar) {
-        return _state.provider.dollar;
+    function bitcoin() public view returns (IBitcoin) {
+        return _state.provider.bitcoin;
     }
 
     function univ2() public view returns (IERC20) {
@@ -61,7 +61,7 @@ contract PoolGetters is PoolState {
     }
 
     function totalRewarded() public view returns (uint256) {
-        return dollar().balanceOf(address(this)).sub(totalClaimable());
+        return bitcoin().balanceOf(address(this)).sub(totalClaimable());
     }
 
     function paused() public view returns (bool) {

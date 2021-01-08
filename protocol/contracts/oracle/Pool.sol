@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Dynamic Dollar Devs, based on the works of the Empty Set Squad
+    Copyright 2020 ESB Devs, based on the works of the Empty Set Squad
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import "./Liquidity.sol";
 contract Pool is PoolSetters, Liquidity {
     using SafeMath for uint256;
 
-    constructor(address dollar, address univ2) public {
+    constructor(address bitcoin, address univ2) public {
         _state.provider.dao = IDAO(msg.sender);
-        _state.provider.dollar = IDollar(dollar);
+        _state.provider.bitcoin = IBitcoin(bitcoin);
         _state.provider.univ2 = IERC20(univ2);
     }
 
@@ -61,7 +61,7 @@ contract Pool is PoolSetters, Liquidity {
     }
 
     function claim(uint256 value) external onlyFrozen(msg.sender) {
-        dollar().transfer(msg.sender, value);
+        bitcoin().transfer(msg.sender, value);
         decrementBalanceOfClaimable(msg.sender, value, "Pool: insufficient claimable balance");
 
         balanceCheck();
