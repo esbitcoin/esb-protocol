@@ -24,12 +24,12 @@ library Constants {
     uint256 private constant CHAIN_ID = 1; // Mainnet
 
     /* Bootstrapping */
-    uint256 private constant BOOTSTRAPPING_PERIOD = 150; // 150 epochs
-    uint256 private constant BOOTSTRAPPING_PRICE = 154e16; // 1.54 USDC (targeting 4.5% inflation)
+    uint256 private constant BOOTSTRAPPING_PERIOD = 126; // 126 epochs
+    uint256 private constant BOOTSTRAPPING_PRICE = 104e16; // 1.04 WBTC (targeting 4% inflation)
 
     /* Oracle */
-    address private constant USDC = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    uint256 private constant ORACLE_RESERVE_MINIMUM = 1e10; // 10,000 USDC
+    address private constant USDC = address(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
+    uint256 private constant ORACLE_RESERVE_MINIMUM = 5e7; // .5 WBTC
 
     /* Bonding */
     uint256 private constant INITIAL_STAKE_MULTIPLE = 1e6; // 100 DSD -> 100M DSDS
@@ -43,34 +43,31 @@ library Constants {
 
     uint256 private constant EPOCH_OFFSET = 0;
     uint256 private constant EPOCH_START = 1606348800;
-    uint256 private constant EPOCH_PERIOD = 7200;
+    uint256 private constant EPOCH_PERIOD = 14400; // 4 hours
 
     /* Governance */
-    uint256 private constant GOVERNANCE_PERIOD = 36;
+    uint256 private constant GOVERNANCE_PERIOD = 12; // 12 epochs or 2 days
     uint256 private constant GOVERNANCE_QUORUM = 20e16; // 20%
     uint256 private constant GOVERNANCE_PROPOSAL_THRESHOLD = 5e15; // 0.5%
     uint256 private constant GOVERNANCE_SUPER_MAJORITY = 66e16; // 66%
-    uint256 private constant GOVERNANCE_EMERGENCY_DELAY = 6; // 6 epochs
+    uint256 private constant GOVERNANCE_EMERGENCY_DELAY = 3; // 3 epochs
 
     /* DAO */
-    uint256 private constant ADVANCE_INCENTIVE = 50e18; // 50 DSD
-    uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 36; // 36 epochs fluid
+    uint256 private constant ADVANCE_INCENTIVE = 1e16; // 0.01 ESB
+    uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 30; // 30 epochs fluid or 5 days
 
     /* Pool */
-    uint256 private constant POOL_EXIT_LOCKUP_EPOCHS = 12; // 12 epochs fluid
+    uint256 private constant POOL_EXIT_LOCKUP_EPOCHS = 18; // 18 epochs fluid or 3 days
 
     /* Market */
-    uint256 private constant COUPON_EXPIRATION = 360;
+    uint256 private constant COUPON_EXPIRATION = 1080; // 180 days
     uint256 private constant DEBT_RATIO_CAP = 35e16; // 35%
     uint256 private constant INITIAL_COUPON_REDEMPTION_PENALTY = 50e16; // 50%
     uint256 private constant COUPON_REDEMPTION_PENALTY_DECAY = 3600; // 1 hour
 
     /* Regulator */
-    uint256 private constant SUPPLY_CHANGE_LIMIT = 2e16; // 2%
-    uint256 private constant SUPPLY_CHANGE_DIVISOR = 25e18; // 25 > Max expansion at 1.5
-    uint256 private constant COUPON_SUPPLY_CHANGE_LIMIT = 3e16; // 3%
-    uint256 private constant COUPON_SUPPLY_CHANGE_DIVISOR = 1666e16; // 16.66 > Max expansion at ~1.5
-    uint256 private constant NEGATIVE_SUPPLY_CHANGE_DIVISOR = 5e18; // 5 > Max negative expansion at 0.9
+    uint256 private constant SUPPLY_CHANGE_LIMIT = 4e16; // 4%
+    uint256 private constant COUPON_SUPPLY_CHANGE_LIMIT = 3e16; // 6%
     uint256 private constant ORACLE_POOL_RATIO = 40; // 40%
 
     /**
@@ -156,20 +153,8 @@ library Constants {
         return Decimal.D256({value: SUPPLY_CHANGE_LIMIT});
     }
 
-    function getSupplyChangeDivisor() internal pure returns (Decimal.D256 memory) {
-        return Decimal.D256({value: SUPPLY_CHANGE_DIVISOR});
-    }
-
     function getCouponSupplyChangeLimit() internal pure returns (Decimal.D256 memory) {
         return Decimal.D256({value: COUPON_SUPPLY_CHANGE_LIMIT});
-    }
-
-    function getCouponSupplyChangeDivisor() internal pure returns (Decimal.D256 memory) {
-        return Decimal.D256({value: COUPON_SUPPLY_CHANGE_DIVISOR});
-    }
-
-    function getNegativeSupplyChangeDivisor() internal pure returns (Decimal.D256 memory) {
-        return Decimal.D256({value: NEGATIVE_SUPPLY_CHANGE_DIVISOR});
     }
 
     function getOraclePoolRatio() internal pure returns (uint256) {

@@ -121,7 +121,7 @@ contract Oracle is IOracle {
         _timestamp = blockTimestamp;
         _cumulative = priceCumulative;
 
-        return price.mul(1e12);
+        return price.mul(1e10);
     }
 
     function updateReserve() private returns (uint256) {
